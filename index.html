@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blueprint Pixel Studio — Scrap Mechanic</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div><p class="eyebrow">SCRAP MECHANIC · LOCAL TOOL</p><h1>Blueprint Pixel Studio</h1><p class="lead">Twórz gotowe, pionowe blueprinty z obrazów lub plików JSON do Scrap Mechanic.</p></div>
+      <div class="local">● działa lokalnie</div>
+    </header>
+
+    <section class="source-panel">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="image">Obraz</button>
+        <button class="tab" data-tab="json">JSON blueprintu</button>
+      </div>
+      <div id="image-source" class="source-content active">
+        <label class="dropzone" for="image-file"><input id="image-file" type="file" accept="image/*"><span class="upload-icon">↑</span><strong>Wybierz obraz</strong><small>PNG, JPG, WEBP lub GIF</small></label>
+        <div class="image-actions"><button id="sample-btn" class="secondary">Wczytaj przykład</button><span id="image-status">Obraz nie został wybrany</span></div>
+      </div>
+      <div id="json-source" class="source-content">
+        <label for="json-input">Wklej zawartość pliku <code>blueprint.json</code></label>
+        <textarea id="json-input" spellcheck="false" placeholder='{"bodies":[{"childs":[...]}],"version":4}'></textarea>
+        <div class="row"><button id="load-json" class="secondary">Wczytaj JSON i pokaż podgląd</button><span id="json-status"></span></div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="controls">
+        <h2>Ustawienia blueprintu</h2>
+        <label>Nazwa blueprintu<input id="blueprint-name" value="Mój pixel art" maxlength="70"></label>
+        <div class="two-cols">
+          <label>Szerokość (bloki)<input id="width" type="number" min="1" max="5000" value="32"></label>
+          <label>Wysokość (bloki)<input id="height" type="number" min="1" max="5000" value="32"></label>
+        </div>
+        <label class="check"><input id="lock-ratio" type="checkbox" checked> Zachowaj proporcje obrazu</label>
+        <label>Materiał
+          <select id="material">
+            <option value="metal">Metal</option><option value="wood">Drewno</option><option value="concrete">Beton</option><option value="glass">Szkło</option>
+          </select>
+        </label>
+        <label>Kolory
+          <select id="color-mode"><option value="original" selected>Zachowaj kolory obrazu</option><option value="palette">Najbliższy z 40 kolorów gry</option><option value="custom">Własne kolory z palety gry</option></select>
+        </label>
+        <label class="check"><input id="transparent" type="checkbox" checked> Przezroczyste piksele pomijaj <span class="info" tabindex="0" data-tip="Nie tworzy bloku w miejscach, w których obraz jest przezroczysty.">ⓘ</span></label>
+        <label class="check json-only"><input id="keep-json-material" type="checkbox" checked> W JSON zachowaj oryginalne materiały <span class="info" tabindex="0" data-tip="Pozostawia materiały zapisane w zaimportowanym blueprintcie zamiast zamieniać je na materiał wybrany powyżej.">ⓘ</span></label>
+        <div class="split-settings"><strong>Podział obrazu</strong><div class="two-cols"><label>Kolumny<input id="split-cols" type="number" min="1" max="5000" value="1"></label><label>Wiersze<input id="split-rows" type="number" min="1" max="5000" value="1"></label></div><label class="check"><input id="lock-split-ratio" type="checkbox" checked> Zachowaj proporcje podziału</label><p id="split-help" class="microcopy">1 część · kliknij część na podglądzie, aby ją wyeksportować.</p></div>
+        <p class="hint">Blueprint zawsze jest pionowy: oś X = szerokość, oś Z = wysokość, grubość = 1 blok.</p>
+        <button id="refresh" class="primary">Odśwież podgląd</button>
+      </aside>
+
+      <section class="preview-panel">
+        <div class="preview-head"><div><h2>Podgląd pikseli</h2><p id="dimensions">Wczytaj obraz lub JSON</p></div><span id="block-count">0 bloków</span></div>
+        <div class="canvas-wrap"><canvas id="preview" width="800" height="800"></canvas><div id="empty-preview">Tu pojawi się Twój blueprint</div></div><div class="preview-tools"><button id="part-prev" class="secondary" title="Poprzednia część">← Część</button><button id="part-next" class="secondary" title="Następna część">Część →</button><button id="part-up" class="secondary" title="Część w górnym wierszu">↑ Część</button><button id="part-down" class="secondary" title="Część w dolnym wierszu">↓ Część</button><span class="tool-separator"></span><button id="zoom-out" class="secondary" title="Oddal podgląd">−</button><button id="zoom-reset" class="secondary">100%</button><button id="zoom-in" class="secondary" title="Przybliż podgląd">+</button><span id="selection-status"></span></div><div id="custom-palette-panel" hidden><div class="palette-actions"><button id="palette-all" class="secondary">Zaznacz wszystko</button><button id="palette-none" class="secondary">Odznacz wszystko</button></div><div id="custom-palette" class="custom-palette" aria-label="Wybór kolorów palety"></div></div>
+        <div class="preview-footer"><span>Siatka oznacza pojedyncze bloki</span><span id="preview-note"></span></div>
+      </section>
+    </section>
+    <section class="export-panel"><div><h2>Gotowe do wklejenia w grze</h2><p>Eksport pobiera plik ZIP.</p></div><button id="export" class="primary export">Pobierz blueprint ZIP</button></section>
+    <p id="message" role="status"></p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
